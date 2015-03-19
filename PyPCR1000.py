@@ -164,17 +164,8 @@ class Application(Tkinter.Tk):
 		Tkinter.Tk.__init__(self)
 
 		# Read in persistent state from an INI file
-		try:
-			fp = open("PyPCR1000.ini", "r")
-		except IOError:
-			pass
-		else:
-			for line in fp.readlines():
-				keyval = line.split('=')
-				if len(keyval) == 2:
-					IniFile[keyval[0].strip()] = keyval[1].strip()
-			fp.close()
-
+		
+		self._readStateFromIniFile()		
 		self.band_step = 1000
 		self.varCall = Tkinter.StringVar()
 		self.varStation = Tkinter.StringVar()
@@ -182,13 +173,8 @@ class Application(Tkinter.Tk):
 		self.varShowHelp = Tkinter.IntVar()		# Show help in status bar?
 		self.varShowHelp.set(1)
 		self.textDTMF = ''		# DTMF tones received
-		self.ReadStations()
-		self.win_title = "Python PCR1000"
-		self.wm_title(self.win_title)
-		self.wm_resizable(1, 1)
-		self.screenheight = self.winfo_screenheight()
-		self.screenwidth = self.winfo_screenwidth()
-		self.one_mm = float(self.screenwidth) / self.winfo_screenmmwidth()
+		self.ReadStations()		
+		self._initializeWindowProperties()
 		self.logging = 0
 		self.scanner = 0		# 1==scan up, -1==scan down
 		self.memscanner = False
@@ -423,6 +409,26 @@ class Application(Tkinter.Tk):
 		self.logging = 1
 		#print self.option_get()
 
+	def _readStateFromIniFile(self):
+		try:
+			fp = open("PyPCR1000.ini", "r")
+		except IOError:
+			pass
+		else:
+			for line in fp.readlines():
+				keyval = line.split('=')
+				if len(keyval) == 2:
+					IniFile[keyval[0].strip()] = keyval[1].strip()
+			fp.close()
+
+	def _initializeWindowProperties(self):
+		self.win_title = "Python PCR1000"
+		self.wm_title(self.win_title)
+		self.wm_resizable(1, 1)
+		self.screenheight = self.winfo_screenheight()
+		self.screenwidth = self.winfo_screenwidth()
+		self.one_mm = float(self.screenwidth) / self.winfo_screenmmwidth()
+		
 	def ConfigMenu(self, event):
 		menu = Tkinter.Menu(self, tearoff=0)
 		menu.add_checkbutton(label='Select multiple bands',	variable=self.varMultBands)
