@@ -191,8 +191,8 @@ class Application(Tkinter.Tk):
 
 		# Measure some widget sizes
 		Canvas = Tkinter.Canvas(frame)
-		w, h = GetTextExtent(Canvas, 'Volume', font=vfont)
-		w = w * 12 / 10
+		width, h = GetTextExtent(Canvas, 'Volume', font=vfont)
+		width = width * 12 / 10
 		b = Tkinter.Radiobutton(Canvas, text="USB", font=bfont, width=4, padx=0, pady=bpady, indicatoron=0)
 		radioWidth = b.winfo_reqwidth()
 		b.destroy()
@@ -205,21 +205,21 @@ class Application(Tkinter.Tk):
 		# Populate left box
 		bg = Left.cget('background')
 
-		self.power_button = PowerButton(Left, text='Power', font=vfont, width=w, bg=bg, bd=3, relief='raised', command=self.Power)
+		self.power_button = PowerButton(Left, text='Power', font=vfont, width=width, bg=bg, bd=3, relief='raised', command=self.Power)
 		self.power_button.SetColorNum(0)
 		Help(self.power_button, 'Power button: press to turn radio on and off.')
 		self.power_button.pack(side='top', anchor='n', expand=1)
 
-		self.dispVolume = VolumeKnob(Left, text='Volume', font=vfont, highlightthickness=0, button=1, radio=self.radio, width=w, bg=bg, relief='flat')
+		self.dispVolume = VolumeKnob(Left, text='Volume', font=vfont, highlightthickness=0, button=1, radio=self.radio, width=width, bg=bg, relief='flat')
 		Help(self.dispVolume, 'Volume control: press knob and turn.')
 		Help(self.dispVolume.iButton, 'Press to mute (set volume to zero), press again to restore.')
 		self.dispVolume.pack(side='top', anchor='n', expand=1)
 
-		self.dispSquelch = SquelchKnob(Left, text='Squelch', font=vfont, highlightthickness=0, radio=self.radio, width=w, bg=bg, relief='flat')
+		self.dispSquelch = SquelchKnob(Left, text='Squelch', font=vfont, highlightthickness=0, radio=self.radio, width=width, bg=bg, relief='flat')
 		Help(self.dispSquelch, 'Squelch control: press knob and turn.')
 		self.dispSquelch.pack(side='top', anchor='n', expand=1)
 
-		self.dispIfShift = IfShiftKnob(Left, text='IF Shift', font=vfont, highlightthickness=0, button=1, radio=self.radio, width=w, bg=bg, relief='flat')
+		self.dispIfShift = IfShiftKnob(Left, text='IF Shift', font=vfont, highlightthickness=0, button=1, radio=self.radio, width=width, bg=bg, relief='flat')
 		Help(self.dispIfShift, 'Intermediate frequency shift control: press knob and turn.')
 		Help(self.dispIfShift.iButton, 'Press to set to 50% (no IF shift).')
 		self.dispIfShift.pack(side='top', anchor='n', expand=1)
