@@ -178,11 +178,8 @@ class Application(Tkinter.Tk):
 		self.logging = 0
 		self.scanner = 0		# 1==scan up, -1==scan down
 		self.memscanner = False
-		#self.bind('<<HaveInput>>', self.HaveInput)
 		self.sequence = 0
-		self.radio = PCR1000(self)
-		self.wm_protocol("WM_DELETE_WINDOW", self.WmDeleteWindow)
-		self.wm_protocol("WM_SAVE_YOURSELF", self.WmDeleteWindow)
+		self.radio = PCR1000(self)		
 
 		frame = self.frame = Tkinter.Frame(self)
 		frame.pack(expand=1, fill='both')
@@ -409,6 +406,8 @@ class Application(Tkinter.Tk):
 		self.screenheight = self.winfo_screenheight()
 		self.screenwidth = self.winfo_screenwidth()
 		self.one_mm = float(self.screenwidth) / self.winfo_screenmmwidth()
+		self.wm_protocol("WM_DELETE_WINDOW", self.WmDeleteWindow)
+		self.wm_protocol("WM_SAVE_YOURSELF", self.WmDeleteWindow)
 
 	def _makeStatusBar(self, frame):
 		global StatusBar
