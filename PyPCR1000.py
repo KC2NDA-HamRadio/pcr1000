@@ -187,23 +187,15 @@ class Application(Tkinter.Tk):
 		frame = self.frame = Tkinter.Frame(self)
 		frame.pack(expand=1, fill='both')
 
-		# Help status bar at bottom
-		global StatusBar
-		StatusBar = Tkinter.Canvas(frame, bd=2, relief='groove')
-		w, h = GetTextExtent(StatusBar, 'Status', font=bfont)
-		StatusBar.statusHeight = h
-		StatusBar.configure(height=h)
-		StatusBar.idText = StatusBar.create_text(2, 2+h/2, text="", anchor='w', font=bfont)
-		StatusBar.pack(side='bottom', anchor='s', fill='x')
-		StatusBar.show_help = self.varShowHelp.get()
+		self._makeStatusBar(frame)
 
 		# Measure some widget sizes
 		Canvas = Tkinter.Canvas(frame)
 		w, h = GetTextExtent(Canvas, 'Volume', font=vfont)
 		w = w * 12 / 10
 		b = Tkinter.Radiobutton(Canvas, text="USB", font=bfont, width=4, padx=0, pady=bpady, indicatoron=0)
-		radioW = b.winfo_reqwidth()
-		radioH = b.winfo_reqheight()
+		radioWidth = b.winfo_reqwidth()
+		radioHeight = b.winfo_reqheight()
 		b.destroy()
 		Canvas.destroy()
 
@@ -244,13 +236,12 @@ class Application(Tkinter.Tk):
 		# TopRight box for tuning buttons, memory buttons, etc.
 		TopRight = Tkinter.Frame(Top, bd=5, relief='groove')
 		TopRight.pack(side='right', anchor='e', expand=1, fill='x')
-		#h = int(self.one_mm * 25.4 + 0.5)
 
 		# frequency display, signal meter
 		frm = Tkinter.Frame(TopLeft)
 		frm.pack(side='top', anchor='nw')
 
-		self.dispFreq = FreqDisplay(frm, app=self, width=radioW * 6, bg=fcolor, radio=self.radio)
+		self.dispFreq = FreqDisplay(frm, app=self, width=radioWidth * 6, bg=fcolor, radio=self.radio)
 		self.dispFreq.pack(side='top', anchor='nw')
 		self.dispFreq.Set(self.radio.frequency)
 		Help(self.dispFreq, 'To tune, press top of digit to increase, bottom to decrease. The H and L show FM frequency high or low.')
@@ -273,20 +264,17 @@ class Application(Tkinter.Tk):
 		frm = Tkinter.Frame(TopLeft)
 		frm.pack(side='top', anchor='nw', fill='x')
 		self.dispMode = ModeDisplay(frm, self.radio)
-		#			height=radioH, relief='groove')
-		#self.dispMode.pack_propagate(0)
+
 		self.dispMode.pack(side='top', anchor='nw', fill='x')
 		Help(self.dispMode, 'Radio reception mode: lower/upper sideband, AM, CW, narrow/wide FM')
 
 		self.dispFilter = FilterDisplay(frm, self.radio)
 		Help(self.dispFilter, 'Radio IF bandwidth')
 		self.dispMode.dispFilter = self.dispFilter
-		#			height=radioH, relief='groove')
-		#self.dispFilter.pack_propagate(0)
+		
 		self.dispFilter.pack(side='top', anchor='nw', fill='x')
 		self.dispCheckB = CheckButtons(frm, self.radio)
-		#			height=radioH, relief='groove')
-		#self.dispCheckB.pack_propagate(0)
+		
 		self.dispCheckB.pack(side='top', anchor='nw', fill='x')
 
 		frm = Tkinter.Frame(TopRight)
@@ -428,6 +416,16 @@ class Application(Tkinter.Tk):
 		self.screenheight = self.winfo_screenheight()
 		self.screenwidth = self.winfo_screenwidth()
 		self.one_mm = float(self.screenwidth) / self.winfo_screenmmwidth()
+
+	def _makeStatusBar(self, frame):
+		global StatusBar
+		StatusBar = Tkinter.Canvas(frame, bd=2, relief='groove')
+		w, h = GetTextExtent(StatusBar, 'Status', font=bfont)
+		StatusBar.statusHeight = h
+		StatusBar.configure(height=h)
+		StatusBar.idText = StatusBar.create_text(2, 2+h/2, text="", anchor='w', font=bfont)
+		StatusBar.pack(side='bottom', anchor='s', fill='x')
+		StatusBar.show_help = self.varShowHelp.get()
 		
 	def ConfigMenu(self, event):
 		menu = Tkinter.Menu(self, tearoff=0)
