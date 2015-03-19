@@ -190,13 +190,7 @@ class Application(Tkinter.Tk):
 		self._makeStatusBar(frame)
 
 		# Measure some widget sizes
-		Canvas = Tkinter.Canvas(frame)
-		width, h = GetTextExtent(Canvas, 'Volume', font=vfont)
-		width = width * 12 / 10
-		b = Tkinter.Radiobutton(Canvas, text="USB", font=bfont, width=4, padx=0, pady=bpady, indicatoron=0)
-		radioWidth = b.winfo_reqwidth()
-		b.destroy()
-		Canvas.destroy()
+		self._calulateRadioButtonWidth(frame)		
 
 		# Left vertical box for power and knobs
 		Left = Tkinter.Frame(frame, bd=5, relief='groove')
@@ -205,21 +199,21 @@ class Application(Tkinter.Tk):
 		# Populate left box
 		bg = Left.cget('background')
 
-		self.power_button = PowerButton(Left, text='Power', font=vfont, width=width, bg=bg, bd=3, relief='raised', command=self.Power)
+		self.power_button = PowerButton(Left, text='Power', font=vfont, width=self.width, bg=bg, bd=3, relief='raised', command=self.Power)
 		self.power_button.SetColorNum(0)
 		Help(self.power_button, 'Power button: press to turn radio on and off.')
 		self.power_button.pack(side='top', anchor='n', expand=1)
 
-		self.dispVolume = VolumeKnob(Left, text='Volume', font=vfont, highlightthickness=0, button=1, radio=self.radio, width=width, bg=bg, relief='flat')
+		self.dispVolume = VolumeKnob(Left, text='Volume', font=vfont, highlightthickness=0, button=1, radio=self.radio, width=self.width, bg=bg, relief='flat')
 		Help(self.dispVolume, 'Volume control: press knob and turn.')
 		Help(self.dispVolume.iButton, 'Press to mute (set volume to zero), press again to restore.')
 		self.dispVolume.pack(side='top', anchor='n', expand=1)
 
-		self.dispSquelch = SquelchKnob(Left, text='Squelch', font=vfont, highlightthickness=0, radio=self.radio, width=width, bg=bg, relief='flat')
+		self.dispSquelch = SquelchKnob(Left, text='Squelch', font=vfont, highlightthickness=0, radio=self.radio, width=self.width, bg=bg, relief='flat')
 		Help(self.dispSquelch, 'Squelch control: press knob and turn.')
 		self.dispSquelch.pack(side='top', anchor='n', expand=1)
 
-		self.dispIfShift = IfShiftKnob(Left, text='IF Shift', font=vfont, highlightthickness=0, button=1, radio=self.radio, width=width, bg=bg, relief='flat')
+		self.dispIfShift = IfShiftKnob(Left, text='IF Shift', font=vfont, highlightthickness=0, button=1, radio=self.radio, width=self.width, bg=bg, relief='flat')
 		Help(self.dispIfShift, 'Intermediate frequency shift control: press knob and turn.')
 		Help(self.dispIfShift.iButton, 'Press to set to 50% (no IF shift).')
 		self.dispIfShift.pack(side='top', anchor='n', expand=1)
@@ -240,7 +234,7 @@ class Application(Tkinter.Tk):
 		frm = Tkinter.Frame(TopLeft)
 		frm.pack(side='top', anchor='nw')
 
-		self.dispFreq = FreqDisplay(frm, app=self, width=radioWidth * 6, bg=fcolor, radio=self.radio)
+		self.dispFreq = FreqDisplay(frm, app=self, width=self.radioWidth * 6, bg=fcolor, radio=self.radio)
 		self.dispFreq.pack(side='top', anchor='nw')
 		self.dispFreq.Set(self.radio.frequency)
 		Help(self.dispFreq, 'To tune, press top of digit to increase, bottom to decrease. The H and L show FM frequency high or low.')
@@ -425,6 +419,15 @@ class Application(Tkinter.Tk):
 		StatusBar.idText = StatusBar.create_text(2, 2+h/2, text="", anchor='w', font=bfont)
 		StatusBar.pack(side='bottom', anchor='s', fill='x')
 		StatusBar.show_help = self.varShowHelp.get()
+
+	def _calulateRadioButtonWidth(self, frame):
+		Canvas = Tkinter.Canvas(frame)
+		self.width, h = GetTextExtent(Canvas, 'Volume', font=vfont)
+		self.width = self.width * 12 / 10
+		b = Tkinter.Radiobutton(Canvas, text="USB", font=bfont, width=4, padx=0, pady=bpady, indicatoron=0)
+		self.radioWidth = b.winfo_reqwidth()
+		b.destroy()
+		Canvas.destroy()
 		
 	def ConfigMenu(self, event):
 		menu = Tkinter.Menu(self, tearoff=0)
