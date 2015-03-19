@@ -195,7 +195,6 @@ class Application(Tkinter.Tk):
 		w = w * 12 / 10
 		b = Tkinter.Radiobutton(Canvas, text="USB", font=bfont, width=4, padx=0, pady=bpady, indicatoron=0)
 		radioWidth = b.winfo_reqwidth()
-		radioHeight = b.winfo_reqheight()
 		b.destroy()
 		Canvas.destroy()
 
