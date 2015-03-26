@@ -196,21 +196,32 @@ class Application(Tkinter.Tk):
 		# Populate left box
 		bg = Left.cget('background')
 
-		self.power_button = PowerButton(Left, text='Power', font=vfont, width=self.width, bg=bg, bd=3, relief='raised', command=self.Power)
+		self.power_button = PowerButton(Left, text='Power', font=vfont, 
+										width=self.width, bg=bg, bd=3, 
+										relief='raised', command=self.Power)
 		self.power_button.SetColorNum(0)
 		Help(self.power_button, 'Power button: press to turn radio on and off.')
 		self.power_button.pack(side='top', anchor='n', expand=1)
 
-		self.dispVolume = VolumeKnob(Left, text='Volume', font=vfont, highlightthickness=0, button=1, radio=self.radio, width=self.width, bg=bg, relief='flat')
+		self.dispVolume = VolumeKnob(Left, text='Volume', font=vfont, 
+									 highlightthickness=0, button=1, 
+									 radio=self.radio, width=self.width, 
+									 bg=bg, relief='flat')
 		Help(self.dispVolume, 'Volume control: press knob and turn.')
-		Help(self.dispVolume.iButton, 'Press to mute (set volume to zero), press again to restore.')
+		Help(self.dispVolume.iButton, 
+			'Press to mute (set volume to zero), press again to restore.')
 		self.dispVolume.pack(side='top', anchor='n', expand=1)
 
-		self.dispSquelch = SquelchKnob(Left, text='Squelch', font=vfont, highlightthickness=0, radio=self.radio, width=self.width, bg=bg, relief='flat')
+		self.dispSquelch = SquelchKnob(Left, text='Squelch', font=vfont, 
+									   highlightthickness=0, radio=self.radio, 
+									   width=self.width, bg=bg, relief='flat')
 		Help(self.dispSquelch, 'Squelch control: press knob and turn.')
 		self.dispSquelch.pack(side='top', anchor='n', expand=1)
 
-		self.dispIfShift = IfShiftKnob(Left, text='IF Shift', font=vfont, highlightthickness=0, button=1, radio=self.radio, width=self.width, bg=bg, relief='flat')
+		self.dispIfShift = IfShiftKnob(Left, text='IF Shift', font=vfont, 
+									   highlightthickness=0, button=1, 
+									   radio=self.radio, width=self.width, bg=bg, 
+									   relief='flat')
 		Help(self.dispIfShift, 'Intermediate frequency shift control: press knob and turn.')
 		Help(self.dispIfShift.iButton, 'Press to set to 50% (no IF shift).')
 		self.dispIfShift.pack(side='top', anchor='n', expand=1)
@@ -231,7 +242,8 @@ class Application(Tkinter.Tk):
 		frm = Tkinter.Frame(TopLeft)
 		frm.pack(side='top', anchor='nw')
 
-		self.dispFreq = FreqDisplay(frm, app=self, width=self.radioWidth * 6, bg=fcolor, radio=self.radio)
+		self.dispFreq = FreqDisplay(frm, app=self, width=self.radioWidth * 6, 
+									bg=fcolor, radio=self.radio)
 		self.dispFreq.pack(side='top', anchor='nw')
 		self.dispFreq.Set(self.radio.frequency)
 		Help(self.dispFreq, 'To tune, press top of digit to increase, bottom to decrease. The H and L show FM frequency high or low.')
@@ -241,7 +253,10 @@ class Application(Tkinter.Tk):
 
 		self.varShift = Tkinter.IntVar()
 		self.shift_delta = 600000
-		b = Tkinter.Checkbutton(f, text="+600k", indicatoron=0, width=5, selectcolor=scolor, font=mfont, padx=0, pady=0, activebackground=ccolor, variable=self.varShift, command=self.ShiftButton)
+		b = Tkinter.Checkbutton(f, text="+600k", indicatoron=0, width=5, 
+								selectcolor=scolor, font=mfont, padx=0, pady=0, 
+								activebackground=ccolor, variable=self.varShift, 
+								command=self.ShiftButton)
 		b.pack(side='right', anchor='ne')
 		b.bind('<ButtonPress-3>', self.ShiftButtonMenu)
 		Help(b, 'Press to shift frequency temporarily, press again to shift back. Configure with right click.')
@@ -274,17 +289,20 @@ class Application(Tkinter.Tk):
 		frd = Tkinter.Frame(frm)
 		frd.pack(side='bottom', anchor='sw', fill='x')
 
-		b = RepeaterButton(frd, text='<Sta', width=6, font=bfont, pady=bpady, padx=0, command=Shim(self.NextStation, 0))
+		b = RepeaterButton(frd, text='<Sta', width=6, font=bfont, pady=bpady, 
+						   padx=0, command=Shim(self.NextStation, 0))
 		Help(b, 'Tune down to the next station in the selected bands. Hold to repeat. Stations are recorded in the file Stations.csv.')
 		b.pack(side='left', anchor='w', expand=1, fill='x')
 
-		b = RepeaterButton(frd, width=6, font=bfont, pady=bpady, padx=0, command=Shim(self.NextFrequency, 0), activebackground=ccolor)
+		b = RepeaterButton(frd, width=6, font=bfont, pady=bpady, padx=0, 
+						   command=Shim(self.NextFrequency, 0), activebackground=ccolor)
 		Help(b, 'Tune down by the indicated frequency step, but stay in the bands. Hold to repeat. Configure with right click.')
 		b.pack(side='left', anchor='w', expand=1, fill='x')
 		b.bind('<ButtonPress-3>', self.StepBandMenu)
 		self.dispStepBandD = b
 
-		b = Tkinter.Button(frd, text='<Scn', width=6, font=bfont, pady=bpady, padx=0, command=self.ScanDownBand)
+		b = Tkinter.Button(frd, text='<Scn', width=6, font=bfont, pady=bpady, 
+						   padx=0, command=self.ScanDownBand)
 		Help(b, 'Start the scanner and scan down in the selected bands. Stop when the squelch opens.')
 		b.pack(side='left', anchor='w', expand=1, fill='x')
 		self.dispScanDown = b
@@ -294,41 +312,50 @@ class Application(Tkinter.Tk):
 		# Memory buttons
 		self.Memories = []
 		for i in range(5, 10):
-			b = Tkinter.Button(frd, text="M%s" % i, width=3, pady=bpady, padx=0, font=bfont, activebackground=ccolor, command=Shim(self.MemoryButtonCmd, i), state='disabled')
+			b = Tkinter.Button(frd, text="M%s" % i, width=3, pady=bpady, 
+							   padx=0, font=bfont, activebackground=ccolor, 
+							   command=Shim(self.MemoryButtonCmd, i), state='disabled')
 			Help(b, 'Memory button: press to change to that frequency. Configure with right click.')
 			b.pack(side='left', anchor='w')
 			b.bind('<ButtonPress-3>', self.MemoryButtonMenu)
 			b.index = i
 			self.Memories.append(None)
 
-		b = Tkinter.Button(frd, text='Unused 2', font=bfont, pady=bpady, width=8, command=self.OnButtonUnused2)
+		b = Tkinter.Button(frd, text='Unused 2', font=bfont, pady=bpady, width=8, 
+						   command=self.OnButtonUnused2)
 		Help(b, 'Program this button yourself in Python!')
 		b.pack(side='right', anchor='e')
 
-		b = RepeaterButton(fru, text='Sta>', width=6, font=bfont, pady=bpady, padx=0, command=Shim(self.NextStation, 1))
+		b = RepeaterButton(fru, text='Sta>', width=6, font=bfont, pady=bpady, 
+						   padx=0, command=Shim(self.NextStation, 1))
 		Help(b, 'Tune up to the next station in the selected bands. Hold to repeat. Stations are recorded in the file Stations.csv.')
 		b.pack(side='left', anchor='w', expand=1, fill='x')
 
-		b = RepeaterButton(fru, width=6, font=bfont, pady=bpady, padx=0, command=Shim(self.NextFrequency, 1), activebackground=ccolor)
+		b = RepeaterButton(fru, width=6, font=bfont, pady=bpady, padx=0, 
+						   command=Shim(self.NextFrequency, 1), activebackground=ccolor)
 		Help(b, 'Tune up by the indicated frequency step, but stay in the bands. Hold to repeat. Configure with right click.')
 		b.pack(side='left', anchor='w', expand=1, fill='x')
 		b.bind('<ButtonPress-3>', self.StepBandMenu)
 		self.dispStepBandU = b
 
-		b = Tkinter.Button(fru, text='Scn>', width=6, font=bfont, pady=bpady, padx=0, command=self.ScanUpBand)
+		b = Tkinter.Button(fru, text='Scn>', width=6, font=bfont, pady=bpady, 
+						   padx=0, command=self.ScanUpBand)
 		Help(b, 'Start the scanner and scan up in the selected bands. Stop when the squelch opens.')
 		b.pack(side='left', anchor='w', expand=1, fill='x')
 		self.dispScanUp = b
 
 		for i in range(0, 5):
-			b = Tkinter.Button(fru, text="M%s" % i, width=3, pady=bpady, padx=0, font=bfont, activebackground=ccolor, command=Shim(self.MemoryButtonCmd, i), state='disabled')
+			b = Tkinter.Button(fru, text="M%s" % i, width=3, pady=bpady, padx=0, 
+							   font=bfont, activebackground=ccolor, 
+							   command=Shim(self.MemoryButtonCmd, i), state='disabled')
 			Help(b, 'Memory button: press to change to that frequency. Configure with right click.')
 			b.pack(side='left', anchor='w')
 			b.bind('<ButtonPress-3>', self.MemoryButtonMenu)
 			b.index = i
 			self.Memories.append(None)
 
-		b = Tkinter.Button(fru, text='Memscan', font=bfont, pady=bpady, width=8, command=self.OnButtonMemscan)
+		b = Tkinter.Button(fru, text='Memscan', font=bfont, pady=bpady, width=8, 
+						   command=self.OnButtonMemscan)
 		Help(b, 'Scan frequencies in Stations.csv. Resume when squelch re-closes.')
 		b.pack(side='right', anchor='e')
 		self.dispMemscan = b
@@ -367,14 +394,16 @@ class Application(Tkinter.Tk):
 		b.pack(side='right', anchor='e')
 		b.bind('<ButtonPress-3>', self.ConfigMenu)
 
-		self.dispDTMF = Tkinter.Label(frm, font=lfont, width=25, anchor='w', text="	 DTMF Tone:")
+		self.dispDTMF = Tkinter.Label(frm, font=lfont, width=25, anchor='w', 
+									  text="	 DTMF Tone:")
 		self.dispDTMF.pack(side='right', anchor='ne')
 		Help(self.dispDTMF, 'If a DTMF tone is received, it is displayed here.')
 		for i in range(0, 2):
 			self.SetDtmf(`i % 10`)
 
 		# Band scope goes in right box bottom
-		bscope = self.dispBandScope = BandScope(frame, self, width=1, height=1, bg=bcolorb)
+		bscope = self.dispBandScope = BandScope(frame, self, width=1, height=1, 
+												bg=bcolorb)
 		Help(bscope, 'Bandscope: Right click to configure.	To tune, click grid, or press "Tune" and drag mouse.')
 		bscope.pack(side='top', anchor='n', expand=1, fill='both')
 
@@ -415,7 +444,8 @@ class Application(Tkinter.Tk):
 		w, h = GetTextExtent(StatusBar, 'Status', font=bfont)
 		StatusBar.statusHeight = h
 		StatusBar.configure(height=h)
-		StatusBar.idText = StatusBar.create_text(2, 2+h/2, text="", anchor='w', font=bfont)
+		StatusBar.idText = StatusBar.create_text(2, 2+h/2, text="", anchor='w', 
+												 font=bfont)
 		StatusBar.pack(side='bottom', anchor='s', fill='x')
 		StatusBar.show_help = self.varShowHelp.get()
 
@@ -423,7 +453,8 @@ class Application(Tkinter.Tk):
 		Canvas = Tkinter.Canvas(frame)
 		self.width, h = GetTextExtent(Canvas, 'Volume', font=vfont)
 		self.width = self.width * 12 / 10
-		b = Tkinter.Radiobutton(Canvas, text="USB", font=bfont, width=4, padx=0, pady=bpady, indicatoron=0)
+		b = Tkinter.Radiobutton(Canvas, text="USB", font=bfont, width=4, padx=0, 
+								pady=bpady, indicatoron=0)
 		self.radioWidth = b.winfo_reqwidth()
 		b.destroy()
 		Canvas.destroy()
@@ -431,7 +462,8 @@ class Application(Tkinter.Tk):
 	def ConfigMenu(self, event):
 		menu = Tkinter.Menu(self, tearoff=0)
 		menu.add_checkbutton(label='Select multiple bands',	variable=self.varMultBands)
-		menu.add_checkbutton(label='Show help at bottom', variable=self.varShowHelp, command=self.HelpCmd)
+		menu.add_checkbutton(label='Show help at bottom', variable=self.varShowHelp, 
+							 command=self.HelpCmd)
 		menu.add_separator()
 
 		bands = Tkinter.Menu(menu, tearoff=0)
@@ -530,11 +562,14 @@ class Application(Tkinter.Tk):
 				col = 0
 
 			if i < count:
-				b = Tkinter.Button(self.bandRows[row], text=filedata[i][0], font=bfont, pady=bpady,	state='normal', padx=0, width=5, command=Shim(self.SelectBand, i))
+				b = Tkinter.Button(self.bandRows[row], text=filedata[i][0], 
+								   font=bfont, pady=bpady,	state='normal', 
+								   padx=0, width=5, command=Shim(self.SelectBand, i))
 				# self.Bands is a list of [button, selected, filedata]
 				self.Bands.append([b, 0, filedata[i]])
 			else:
-				b = Tkinter.Button(self.bandRows[row], text='',	font=bfont, pady=bpady,	state='disabled', padx=0, width=5)
+				b = Tkinter.Button(self.bandRows[row], text='',	font=bfont, 
+								   pady=bpady,	state='disabled', padx=0, width=5)
 				self.Bands.append([b, 0, []])
 
 			Help(b, 'Band buttons: press to select the band and tune to its start.')
@@ -669,9 +704,11 @@ class Application(Tkinter.Tk):
 			self.ScanUpBand() # Turn off previous scan
 		if self.scanner:
 			self.scanner = 0
-			self.dispScanDown.config(background=self.btnBcolor, activebackground=self.btnAcolor, relief='raised')
+			self.dispScanDown.config(background=self.btnBcolor, 
+									 activebackground=self.btnAcolor, relief='raised')
 		else:
-			self.dispScanDown.config(background=ncolor, activebackground=ncolor, relief='sunken')
+			self.dispScanDown.config(background=ncolor, activebackground=ncolor, 
+									 relief='sunken')
 			self.scanner = -1
 			if self.NextFrequency(0, 1):
 				self.after(ScanMillisecs, self.RunScanner)
@@ -685,9 +722,11 @@ class Application(Tkinter.Tk):
 			self.ScanDownBand() # Turn off previous scan
 		if self.scanner:
 			self.scanner = 0
-			self.dispScanUp.config(background=self.btnBcolor, activebackground=self.btnAcolor, relief='raised')
+			self.dispScanUp.config(background=self.btnBcolor, 
+								   activebackground=self.btnAcolor, relief='raised')
 		else:
-			self.dispScanUp.config(background=ncolor, activebackground=ncolor, relief='sunken')
+			self.dispScanUp.config(background=ncolor, activebackground=ncolor, 
+								   relief='sunken')
 			self.scanner = 1
 			if self.NextFrequency(1, 1):
 				self.after(ScanMillisecs, self.RunScanner)
@@ -810,11 +849,13 @@ class Application(Tkinter.Tk):
 				self.ListStations.remove(freq)
 				del self.Stations[freq]
 		elif freq in self.ListStations:
-			self.Stations[freq] = [self.Stations[freq][0], call, self.radio.mode, self.radio.filter, desc + '\n']
+			self.Stations[freq] = [self.Stations[freq][0], call, self.radio.mode, 
+								   self.radio.filter, desc + '\n']
 		else:
 			self.ListStations.append(freq)
 			self.ListStations.sort()
-			self.Stations[freq] = [str(freq), call, self.radio.mode, self.radio.filter, desc + '\n']
+			self.Stations[freq] = [str(freq), call, self.radio.mode, 
+								   self.radio.filter, desc + '\n']
 		self.WriteStations()
 
 	def OnButtonSerial(self):
@@ -873,11 +914,13 @@ class Application(Tkinter.Tk):
 
 	def StopMemscan(self):
 		self.memscanner = False
-		self.dispMemscan.config(background=self.btnBcolor, activebackground=self.btnAcolor, relief='raised')
+		self.dispMemscan.config(background=self.btnBcolor, 
+								activebackground=self.btnAcolor, relief='raised')
 
 	def StartMemscan(self):
 		self.memscanner = True
-		self.dispMemscan.config(background=ncolor, activebackground=ncolor, relief='sunken')
+		self.dispMemscan.config(background=ncolor, activebackground=ncolor, 
+								relief='sunken')
 		self.after(ScanMillisecs, self.RunMemscan)
 
 	def OnButtonUnused2(self):
