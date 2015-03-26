@@ -284,24 +284,24 @@ class Application(Tkinter.Tk):
 
 		frm = Tkinter.Frame(TopRight)
 		frm.pack(side='top', anchor='n', fill='x')
-		fru = Tkinter.Frame(frm)
-		fru.pack(side='top', anchor='nw', fill='x')
-		frd = Tkinter.Frame(frm)
-		frd.pack(side='bottom', anchor='sw', fill='x')
+		self.fru = Tkinter.Frame(frm)
+		self.fru.pack(side='top', anchor='nw', fill='x')
+		self.frd = Tkinter.Frame(frm)
+		self.frd.pack(side='bottom', anchor='sw', fill='x')
 
-		b = RepeaterButton(frd, text='<Sta', width=6, font=bfont, pady=bpady, 
+		b = RepeaterButton(self.frd, text='<Sta', width=6, font=bfont, pady=bpady, 
 						   padx=0, command=Shim(self.NextStation, 0))
 		Help(b, 'Tune down to the next station in the selected bands. Hold to repeat. Stations are recorded in the file Stations.csv.')
 		b.pack(side='left', anchor='w', expand=1, fill='x')
 
-		b = RepeaterButton(frd, width=6, font=bfont, pady=bpady, padx=0, 
+		b = RepeaterButton(self.frd, width=6, font=bfont, pady=bpady, padx=0, 
 						   command=Shim(self.NextFrequency, 0), activebackground=ccolor)
 		Help(b, 'Tune down by the indicated frequency step, but stay in the bands. Hold to repeat. Configure with right click.')
 		b.pack(side='left', anchor='w', expand=1, fill='x')
 		b.bind('<ButtonPress-3>', self.StepBandMenu)
 		self.dispStepBandD = b
 
-		b = Tkinter.Button(frd, text='<Scn', width=6, font=bfont, pady=bpady, 
+		b = Tkinter.Button(self.frd, text='<Scn', width=6, font=bfont, pady=bpady, 
 						   padx=0, command=self.ScanDownBand)
 		Help(b, 'Start the scanner and scan down in the selected bands. Stop when the squelch opens.')
 		b.pack(side='left', anchor='w', expand=1, fill='x')
@@ -309,57 +309,7 @@ class Application(Tkinter.Tk):
 		self.btnBcolor = b.cget('background') # Save color
 		self.btnAcolor = b.cget('activebackground')
 
-		# Memory buttons
-		self.Memories = []
-		for i in range(5, 10):
-			b = Tkinter.Button(frd, text="M%s" % i, width=3, pady=bpady, 
-							   padx=0, font=bfont, activebackground=ccolor, 
-							   command=Shim(self.MemoryButtonCmd, i), state='disabled')
-			Help(b, 'Memory button: press to change to that frequency. Configure with right click.')
-			b.pack(side='left', anchor='w')
-			b.bind('<ButtonPress-3>', self.MemoryButtonMenu)
-			b.index = i
-			self.Memories.append(None)
-
-		b = Tkinter.Button(frd, text='Unused 2', font=bfont, pady=bpady, width=8, 
-						   command=self.OnButtonUnused2)
-		Help(b, 'Program this button yourself in Python!')
-		b.pack(side='right', anchor='e')
-
-		b = RepeaterButton(fru, text='Sta>', width=6, font=bfont, pady=bpady, 
-						   padx=0, command=Shim(self.NextStation, 1))
-		Help(b, 'Tune up to the next station in the selected bands. Hold to repeat. Stations are recorded in the file Stations.csv.')
-		b.pack(side='left', anchor='w', expand=1, fill='x')
-
-		b = RepeaterButton(fru, width=6, font=bfont, pady=bpady, padx=0, 
-						   command=Shim(self.NextFrequency, 1), activebackground=ccolor)
-		Help(b, 'Tune up by the indicated frequency step, but stay in the bands. Hold to repeat. Configure with right click.')
-		b.pack(side='left', anchor='w', expand=1, fill='x')
-		b.bind('<ButtonPress-3>', self.StepBandMenu)
-		self.dispStepBandU = b
-
-		b = Tkinter.Button(fru, text='Scn>', width=6, font=bfont, pady=bpady, 
-						   padx=0, command=self.ScanUpBand)
-		Help(b, 'Start the scanner and scan up in the selected bands. Stop when the squelch opens.')
-		b.pack(side='left', anchor='w', expand=1, fill='x')
-		self.dispScanUp = b
-
-		for i in range(0, 5):
-			b = Tkinter.Button(fru, text="M%s" % i, width=3, pady=bpady, padx=0, 
-							   font=bfont, activebackground=ccolor, 
-							   command=Shim(self.MemoryButtonCmd, i), state='disabled')
-			Help(b, 'Memory button: press to change to that frequency. Configure with right click.')
-			b.pack(side='left', anchor='w')
-			b.bind('<ButtonPress-3>', self.MemoryButtonMenu)
-			b.index = i
-			self.Memories.append(None)
-
-		b = Tkinter.Button(fru, text='Memscan', font=bfont, pady=bpady, width=8, 
-						   command=self.OnButtonMemscan)
-		Help(b, 'Scan frequencies in Stations.csv. Resume when squelch re-closes.')
-		b.pack(side='right', anchor='e')
-		self.dispMemscan = b
-
+		self._initializeMemoryButtons()
 		self.StepBandChange(self.band_step)
 
 		# Band buttons: Room for three rows of seven columns
@@ -458,6 +408,57 @@ class Application(Tkinter.Tk):
 		self.radioWidth = b.winfo_reqwidth()
 		b.destroy()
 		Canvas.destroy()
+
+	def _initializeMemoryButtons(self):
+		self.Memories = []
+		for i in range(5, 10):
+			b = Tkinter.Button(self.frd, text="M%s" % i, width=3, pady=bpady, 
+							   padx=0, font=bfont, activebackground=ccolor, 
+							   command=Shim(self.MemoryButtonCmd, i), state='disabled')
+			Help(b, 'Memory button: press to change to that frequency. Configure with right click.')
+			b.pack(side='left', anchor='w')
+			b.bind('<ButtonPress-3>', self.MemoryButtonMenu)
+			b.index = i
+			self.Memories.append(None)
+
+		b = Tkinter.Button(self.frd, text='Unused 2', font=bfont, pady=bpady, width=8, 
+						   command=self.OnButtonUnused2)
+		Help(b, 'Program this button yourself in Python!')
+		b.pack(side='right', anchor='e')
+
+		b = RepeaterButton(self.fru, text='Sta>', width=6, font=bfont, pady=bpady, 
+						   padx=0, command=Shim(self.NextStation, 1))
+		Help(b, 'Tune up to the next station in the selected bands. Hold to repeat. Stations are recorded in the file Stations.csv.')
+		b.pack(side='left', anchor='w', expand=1, fill='x')
+
+		b = RepeaterButton(self.fru, width=6, font=bfont, pady=bpady, padx=0, 
+						   command=Shim(self.NextFrequency, 1), activebackground=ccolor)
+		Help(b, 'Tune up by the indicated frequency step, but stay in the bands. Hold to repeat. Configure with right click.')
+		b.pack(side='left', anchor='w', expand=1, fill='x')
+		b.bind('<ButtonPress-3>', self.StepBandMenu)
+		self.dispStepBandU = b
+
+		b = Tkinter.Button(self.fru, text='Scn>', width=6, font=bfont, pady=bpady, 
+						   padx=0, command=self.ScanUpBand)
+		Help(b, 'Start the scanner and scan up in the selected bands. Stop when the squelch opens.')
+		b.pack(side='left', anchor='w', expand=1, fill='x')
+		self.dispScanUp = b
+
+		for i in range(0, 5):
+			b = Tkinter.Button(self.fru, text="M%s" % i, width=3, pady=bpady, padx=0, 
+							   font=bfont, activebackground=ccolor, 
+							   command=Shim(self.MemoryButtonCmd, i), state='disabled')
+			Help(b, 'Memory button: press to change to that frequency. Configure with right click.')
+			b.pack(side='left', anchor='w')
+			b.bind('<ButtonPress-3>', self.MemoryButtonMenu)
+			b.index = i
+			self.Memories.append(None)
+
+		b = Tkinter.Button(self.fru, text='Memscan', font=bfont, pady=bpady, width=8, 
+						   command=self.OnButtonMemscan)
+		Help(b, 'Scan frequencies in Stations.csv. Resume when squelch re-closes.')
+		b.pack(side='right', anchor='e')
+		self.dispMemscan = b
 		
 	def ConfigMenu(self, event):
 		menu = Tkinter.Menu(self, tearoff=0)
