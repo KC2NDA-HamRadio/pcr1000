@@ -239,16 +239,16 @@ class Application(Tkinter.Tk):
 		TopRight.pack(side='right', anchor='e', expand=1, fill='x')
 
 		# frequency display, signal meter
-		frm = Tkinter.Frame(TopLeft)
-		frm.pack(side='top', anchor='nw')
+		self.frm = Tkinter.Frame(TopLeft)
+		self.frm.pack(side='top', anchor='nw')
 
-		self.dispFreq = FreqDisplay(frm, app=self, width=self.radioWidth * 6, 
+		self.dispFreq = FreqDisplay(self.frm, app=self, width=self.radioWidth * 6, 
 									bg=fcolor, radio=self.radio)
 		self.dispFreq.pack(side='top', anchor='nw')
 		self.dispFreq.Set(self.radio.frequency)
 		Help(self.dispFreq, 'To tune, press top of digit to increase, bottom to decrease. The H and L show FM frequency high or low.')
 
-		f = Tkinter.Frame(frm)
+		f = Tkinter.Frame(self.frm)
 		f.pack(side='top', anchor='nw', fill='x')
 
 		self.varShift = Tkinter.IntVar()
@@ -266,48 +266,25 @@ class Application(Tkinter.Tk):
 		self.dispSignal.pack(side='right', anchor='nw', expand=1, fill='both')
 
 		# mode, filter and check buttons
-		frm = Tkinter.Frame(TopLeft)
-		frm.pack(side='top', anchor='nw', fill='x')
-		self.dispMode = ModeDisplay(frm, self.radio)
+		self.frm = Tkinter.Frame(TopLeft)
+		self.frm.pack(side='top', anchor='nw', fill='x')
+		self.dispMode = ModeDisplay(self.frm, self.radio)
 
 		self.dispMode.pack(side='top', anchor='nw', fill='x')
 		Help(self.dispMode, 'Radio reception mode: lower/upper sideband, AM, CW, narrow/wide FM')
 
-		self.dispFilter = FilterDisplay(frm, self.radio)
+		self.dispFilter = FilterDisplay(self.frm, self.radio)
 		Help(self.dispFilter, 'Radio IF bandwidth')
 		self.dispMode.dispFilter = self.dispFilter
 		
 		self.dispFilter.pack(side='top', anchor='nw', fill='x')
-		self.dispCheckB = CheckButtons(frm, self.radio)
+		self.dispCheckB = CheckButtons(self.frm, self.radio)
 		
 		self.dispCheckB.pack(side='top', anchor='nw', fill='x')
 
-		frm = Tkinter.Frame(TopRight)
-		frm.pack(side='top', anchor='n', fill='x')
-		self.fru = Tkinter.Frame(frm)
-		self.fru.pack(side='top', anchor='nw', fill='x')
-		self.frd = Tkinter.Frame(frm)
-		self.frd.pack(side='bottom', anchor='sw', fill='x')
-
-		b = RepeaterButton(self.frd, text='<Sta', width=6, font=bfont, pady=bpady, 
-						   padx=0, command=Shim(self.NextStation, 0))
-		Help(b, 'Tune down to the next station in the selected bands. Hold to repeat. Stations are recorded in the file Stations.csv.')
-		b.pack(side='left', anchor='w', expand=1, fill='x')
-
-		b = RepeaterButton(self.frd, width=6, font=bfont, pady=bpady, padx=0, 
-						   command=Shim(self.NextFrequency, 0), activebackground=ccolor)
-		Help(b, 'Tune down by the indicated frequency step, but stay in the bands. Hold to repeat. Configure with right click.')
-		b.pack(side='left', anchor='w', expand=1, fill='x')
-		b.bind('<ButtonPress-3>', self.StepBandMenu)
-		self.dispStepBandD = b
-
-		b = Tkinter.Button(self.frd, text='<Scn', width=6, font=bfont, pady=bpady, 
-						   padx=0, command=self.ScanDownBand)
-		Help(b, 'Start the scanner and scan down in the selected bands. Stop when the squelch opens.')
-		b.pack(side='left', anchor='w', expand=1, fill='x')
-		self.dispScanDown = b
-		self.btnBcolor = b.cget('background') # Save color
-		self.btnAcolor = b.cget('activebackground')
+		self.frm = Tkinter.Frame(TopRight)
+		self.frm.pack(side='top', anchor='n', fill='x')
+		
 
 		self._initializeMemoryButtons()
 		self.StepBandChange(self.band_step)
@@ -321,30 +298,30 @@ class Application(Tkinter.Tk):
 		self.Bands = []
 
 		# Call entries
-		frm = Tkinter.Frame(frame, bd=5, relief='groove')
-		frm.pack(side='top', anchor='n', fill='x')
+		self.frm = Tkinter.Frame(frame, bd=5, relief='groove')
+		self.frm.pack(side='top', anchor='n', fill='x')
 
-		b = Tkinter.Label(frm, text="Call", font=lfont)
+		b = Tkinter.Label(self.frm, text="Call", font=lfont)
 		b.pack(side='left', anchor='nw')
 
-		b = Tkinter.Entry(frm, bg=fcolor, width=12, textvariable=self.varCall)
-		#b.bind('<MouseWheel>', MouseWheel)
-		#print b.bind()
+		b = Tkinter.Entry(self.frm, bg=fcolor, width=12, textvariable=self.varCall)
+		
+
 		Help(b, 'Enter the call sign of known stations, and hit "Enter". Stations are recorded in the file Stations.csv.')
 		b.pack(side='left', anchor='nw')
 		b.bind('<Key-Return>', self.SetStation)
 
-		b = Tkinter.Entry(frm, bg=fcolor, textvariable=self.varStation)
+		b = Tkinter.Entry(self.frm, bg=fcolor, textvariable=self.varStation)
 		Help(b, 'Enter a description of known stations, and hit "Enter". Stations are recorded in the file Stations.csv.')
 		b.pack(side='left', anchor='nw', expand=1, fill='x')
 		b.bind('<Key-Return>', self.SetStation)
 
-		b = Tkinter.Label(frm, font=lfont, text='Config', bd=1, relief='raised')
+		b = Tkinter.Label(self.frm, font=lfont, text='Config', bd=1, relief='raised')
 		Help(b, 'Right click to get a configuration menu.')
 		b.pack(side='right', anchor='e')
 		b.bind('<ButtonPress-3>', self.ConfigMenu)
 
-		self.dispDTMF = Tkinter.Label(frm, font=lfont, width=25, anchor='w', 
+		self.dispDTMF = Tkinter.Label(self.frm, font=lfont, width=25, anchor='w', 
 									  text="	 DTMF Tone:")
 		self.dispDTMF.pack(side='right', anchor='ne')
 		Help(self.dispDTMF, 'If a DTMF tone is received, it is displayed here.')
@@ -410,6 +387,30 @@ class Application(Tkinter.Tk):
 		Canvas.destroy()
 
 	def _initializeMemoryButtons(self):
+		self.fru = Tkinter.Frame(self.frm)
+		self.fru.pack(side='top', anchor='nw', fill='x')
+		self.frd = Tkinter.Frame(self.frm)
+		self.frd.pack(side='bottom', anchor='sw', fill='x')
+		b = RepeaterButton(self.frd, text='<Sta', width=6, font=bfont, pady=bpady, 
+						   padx=0, command=Shim(self.NextStation, 0))
+		Help(b, 'Tune down to the next station in the selected bands. Hold to repeat. Stations are recorded in the file Stations.csv.')
+		b.pack(side='left', anchor='w', expand=1, fill='x')
+
+		b = RepeaterButton(self.frd, width=6, font=bfont, pady=bpady, padx=0, 
+						   command=Shim(self.NextFrequency, 0), activebackground=ccolor)
+		Help(b, 'Tune down by the indicated frequency step, but stay in the bands. Hold to repeat. Configure with right click.')
+		b.pack(side='left', anchor='w', expand=1, fill='x')
+		b.bind('<ButtonPress-3>', self.StepBandMenu)
+		self.dispStepBandD = b
+
+		b = Tkinter.Button(self.frd, text='<Scn', width=6, font=bfont, pady=bpady, 
+						   padx=0, command=self.ScanDownBand)
+		Help(b, 'Start the scanner and scan down in the selected bands. Stop when the squelch opens.')
+		b.pack(side='left', anchor='w', expand=1, fill='x')
+		self.dispScanDown = b
+		self.btnBcolor = b.cget('background') # Save color
+		self.btnAcolor = b.cget('activebackground')
+
 		self.Memories = []
 		for i in range(5, 10):
 			b = Tkinter.Button(self.frd, text="M%s" % i, width=3, pady=bpady, 
@@ -2130,33 +2131,33 @@ class DialogSerial(Tkinter.Toplevel):
 		self.varSend.set("H1?")
 		self.varPortText = Tkinter.StringVar()
 
-		frm = Tkinter.Frame(self) # top row
-		frm.pack(side='top', anchor='nw', fill='x')
-		l = Tkinter.Label(frm, text='Serial port', font=lfont)
+		self.frm = Tkinter.Frame(self) # top row
+		self.frm.pack(side='top', anchor='nw', fill='x')
+		l = Tkinter.Label(self.frm, text='Serial port', font=lfont)
 		l.pack(side='left', anchor='w')
 		self.widgetPort = []			 # The widgets to select the port
 
 		for port in range(0, 7):
-			b = Tkinter.Radiobutton(frm, text=str(port), padx=3, font=bfont, variable=self.varPort, value=port)
+			b = Tkinter.Radiobutton(self.frm, text=str(port), padx=3, font=bfont, variable=self.varPort, value=port)
 			b.pack(side='left', anchor='w')
 			self.widgetPort.append(b)
 
-		b = Tkinter.Radiobutton(frm, text='Name:', font=bfont, variable=self.varPort, value=-1)
+		b = Tkinter.Radiobutton(self.frm, text='Name:', font=bfont, variable=self.varPort, value=-1)
 		self.widgetPort.append(b)
 		b.pack(side='left', anchor='w')
 
-		e = Tkinter.Entry(frm, bg=White, width=18, textvariable=self.varPortText)
+		e = Tkinter.Entry(self.frm, bg=White, width=18, textvariable=self.varPortText)
 		e.pack(side='left', anchor='w', expand=1, fill='x')
 		self.widgetPort.append(e)			 # The last item is the entry widget
 
 		# End of top row
-		frm = Tkinter.Frame(self) # Second row
-		frm.pack(side='top', anchor='nw', fill='x')
-		l = Tkinter.Label(frm, text='Baud rate', font=lfont)
+		self.frm = Tkinter.Frame(self) # Second row
+		self.frm.pack(side='top', anchor='nw', fill='x')
+		l = Tkinter.Label(self.frm, text='Baud rate', font=lfont)
 		l.pack(side='left', anchor='w')
 
 		for baud in (9600, 38400):
-			b = Tkinter.Radiobutton(frm, text=str(baud), font=bfont, variable=self.varBaud, width=6, value=baud, command=self.SetBaud)
+			b = Tkinter.Radiobutton(self.frm, text=str(baud), font=bfont, variable=self.varBaud, width=6, value=baud, command=self.SetBaud)
 			b.pack(side='left', anchor='w')
 
 		portname = self.serialport.getPort()
@@ -2168,18 +2169,18 @@ class DialogSerial(Tkinter.Toplevel):
 			self.varPortText.set(portname)
 
 		# end of second row
-		frm = Tkinter.Frame(self) # last row
-		frm.pack(side='bottom', anchor='s', fill='x')
-		l = Tkinter.Label(frm, text='Write to port', font=lfont)
+		self.frm = Tkinter.Frame(self) # last row
+		self.frm.pack(side='bottom', anchor='s', fill='x')
+		l = Tkinter.Label(self.frm, text='Write to port', font=lfont)
 		l.pack(side='left', anchor='w')
 
-		b = Tkinter.Button(frm, text='Port State', command=self.State, font=bfont)
+		b = Tkinter.Button(self.frm, text='Port State', command=self.State, font=bfont)
 		b.pack(side='right', anchor='e', padx='8p', pady='2p')
 
-		self.bOpen = Tkinter.Button(frm, text='', command=self.Open, font=bfont)
+		self.bOpen = Tkinter.Button(self.frm, text='', command=self.Open, font=bfont)
 		self.bOpen.pack(side='right', anchor='e', padx='8p', pady='2p')
 
-		entry = Tkinter.Entry(frm, bg=White, textvariable=self.varSend)
+		entry = Tkinter.Entry(self.frm, bg=White, textvariable=self.varSend)
 		entry.pack(side='left', anchor='w', expand=1, fill='x')
 		entry.bind('<Key-Return>', self.ToPort)
 		# end of last row.
