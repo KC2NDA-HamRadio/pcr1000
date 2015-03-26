@@ -181,7 +181,7 @@ class Application(Tkinter.Tk):
 		self.scanner = 0		# 1==scan up, -1==scan down
 		self.memscanner = False
 		self.sequence = 0
-		self.radio = PCR1000(self)		
+		self.radio = PCR1000(self)
 
 		frame = self.frame = Tkinter.Frame(self)
 		frame.pack(expand=1, fill='both')
@@ -236,9 +236,9 @@ class Application(Tkinter.Tk):
 		TopLeft = Tkinter.Frame(Top, bd=5, relief='groove')
 		TopLeft.pack(side='left', anchor='w')
 
-		# TopRight box for tuning buttons, memory buttons, etc.
-		TopRight = Tkinter.Frame(Top, bd=5, relief='groove')
-		TopRight.pack(side='right', anchor='e', expand=1, fill='x')
+		# self.TopRight box for tuning buttons, memory buttons, etc.
+		self.TopRight = Tkinter.Frame(Top, bd=5, relief='groove')
+		self.TopRight.pack(side='right', anchor='e', expand=1, fill='x')
 
 		# frequency display, signal meter
 		self.frm = Tkinter.Frame(TopLeft)
@@ -284,20 +284,14 @@ class Application(Tkinter.Tk):
 		
 		self.dispCheckB.pack(side='top', anchor='nw', fill='x')
 
-		self.frm = Tkinter.Frame(TopRight)
+		self.frm = Tkinter.Frame(self.TopRight)
 		self.frm.pack(side='top', anchor='n', fill='x')
 		
 
-		self._initializeMemoryButtons()
+		self._initializeStationMemoryBandButtons()		
 		self.StepBandChange(self.band_step)
 
 		# Band buttons: Room for three rows of seven columns
-		self.bandRows = []
-		for i in range(3):		# Create three rows
-			frs = Tkinter.Frame(TopRight)
-			frs.pack(side='top', anchor='nw', fill='x')
-			self.bandRows.append(frs)
-		self.Bands = []
 
 		# Call entries
 		self.frm = Tkinter.Frame(frame, bd=5, relief='groove')
@@ -337,10 +331,6 @@ class Application(Tkinter.Tk):
 		bscope.pack(side='top', anchor='n', expand=1, fill='both')
 
 		# End of widget create and place
-		try:
-			self.MakeBands(IniFile['AppBandFileName'])
-		except:
-			pass
 		self.radio.SetAll()
 		self.logging = 1
 		#print self.option_get()
@@ -393,7 +383,7 @@ class Application(Tkinter.Tk):
 		Canvas.destroy()
 	
 	# -----------------------
-	def _initializeMemoryButtons(self):
+	def _initializeStationMemoryBandButtons(self):
 		self.fru = Tkinter.Frame(self.frm)
 		self.fru.pack(side='top', anchor='nw', fill='x')
 		self.frd = Tkinter.Frame(self.frm)
@@ -467,6 +457,17 @@ class Application(Tkinter.Tk):
 		Help(b, 'Scan frequencies in Stations.csv. Resume when squelch re-closes.')
 		b.pack(side='right', anchor='e')
 		self.dispMemscan = b
+
+		self.bandRows = []
+		for i in range(3):		# Create three rows
+			frs = Tkinter.Frame(self.TopRight)
+			frs.pack(side='top', anchor='nw', fill='x')
+			self.bandRows.append(frs)
+		self.Bands = []
+		try:
+			self.MakeBands(IniFile['AppBandFileName'])
+		except:
+			pass
 	
 	# -----------------------
 	def ConfigMenu(self, event):
