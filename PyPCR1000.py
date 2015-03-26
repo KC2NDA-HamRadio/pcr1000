@@ -124,7 +124,7 @@ def ShowFreq(freq):
 		t = t + add
 
 	return t
-
+# -----------------------
 def BandFileNames():
 	"""return a list of band file names"""
 	l = []
@@ -132,7 +132,7 @@ def BandFileNames():
 		if name[-6:].lower() == '.bands':
 			l.append(name)
 	return l
-
+# -----------------------
 def ReadBands(filename):
 	"""
 	Read data in the Bands file
@@ -157,9 +157,11 @@ def ReadBands(filename):
 
 	fp.close()
 	return b
-
+# --------------------------------------------------------------------------
 class Application(Tkinter.Tk):
 	"""This application displays a radio control screen."""
+
+	# -----------------------
 	def __init__(self):
 		Tkinter.Tk.__init__(self)
 
@@ -187,7 +189,7 @@ class Application(Tkinter.Tk):
 		self._makeStatusBar(frame)
 
 		# Measure some widget sizes
-		self._calulateRadioButtonWidth(frame)		
+		self._calulateRadioButtonWidth(frame)
 
 		# Left vertical box for power and knobs
 		Left = Tkinter.Frame(frame, bd=5, relief='groove')
@@ -342,7 +344,8 @@ class Application(Tkinter.Tk):
 		self.radio.SetAll()
 		self.logging = 1
 		#print self.option_get()
-
+	
+	# -----------------------
 	def _readStateFromIniFile(self):
 		try:
 			fp = open("PyPCR1000.ini", "r")
@@ -354,7 +357,8 @@ class Application(Tkinter.Tk):
 				if len(keyval) == 2:
 					IniFile[keyval[0].strip()] = keyval[1].strip()
 			fp.close()
-
+	
+	# -----------------------
 	def _initializeWindowProperties(self):
 		self.win_title = "Python PCR1000"
 		self.wm_title(self.win_title)
@@ -364,7 +368,8 @@ class Application(Tkinter.Tk):
 		self.one_mm = float(self.screenwidth) / self.winfo_screenmmwidth()
 		self.wm_protocol("WM_DELETE_WINDOW", self.WmDeleteWindow)
 		self.wm_protocol("WM_SAVE_YOURSELF", self.WmDeleteWindow)
-
+	
+	# -----------------------
 	def _makeStatusBar(self, frame):
 		global StatusBar
 		StatusBar = Tkinter.Canvas(frame, bd=2, relief='groove')
@@ -375,7 +380,8 @@ class Application(Tkinter.Tk):
 												 font=bfont)
 		StatusBar.pack(side='bottom', anchor='s', fill='x')
 		StatusBar.show_help = self.varShowHelp.get()
-
+	
+	# -----------------------
 	def _calulateRadioButtonWidth(self, frame):
 		Canvas = Tkinter.Canvas(frame)
 		self.width, h = GetTextExtent(Canvas, 'Volume', font=vfont)
@@ -385,7 +391,8 @@ class Application(Tkinter.Tk):
 		self.radioWidth = b.winfo_reqwidth()
 		b.destroy()
 		Canvas.destroy()
-
+	
+	# -----------------------
 	def _initializeMemoryButtons(self):
 		self.fru = Tkinter.Frame(self.frm)
 		self.fru.pack(side='top', anchor='nw', fill='x')
@@ -460,7 +467,8 @@ class Application(Tkinter.Tk):
 		Help(b, 'Scan frequencies in Stations.csv. Resume when squelch re-closes.')
 		b.pack(side='right', anchor='e')
 		self.dispMemscan = b
-		
+	
+	# -----------------------
 	def ConfigMenu(self, event):
 		menu = Tkinter.Menu(self, tearoff=0)
 		menu.add_checkbutton(label='Select multiple bands',	variable=self.varMultBands)
@@ -477,6 +485,7 @@ class Application(Tkinter.Tk):
 		menu.add_command(label="Show serial port...", command=self.OnButtonSerial)
 		menu.tk_popup(event.x_root, event.y_root)
 
+	# -----------------------
 	def HelpCmd(self):
 		if self.varShowHelp.get():
 			StatusBar.show_help = 1
@@ -485,6 +494,7 @@ class Application(Tkinter.Tk):
 			StatusBar.show_help = 0
 			StatusBar.configure(bd=0, height=0)
 
+	# -----------------------
 	def ReadStations(self):
 		"""
 		Read data in Stations.csv
@@ -507,6 +517,7 @@ class Application(Tkinter.Tk):
 		self.ListStations.sort()
 		self.changedStations = 0
 
+	# -----------------------
 	def WriteStations(self):
 		"""Write the changed Stations.csv"""
 		dict = self.Stations
@@ -521,6 +532,7 @@ class Application(Tkinter.Tk):
 		fp.write(text)
 		fp.close()
 
+	# -----------------------
 	def WmDeleteWindow(self):
 		self.radio.RadioPower(0)
 		#if self.changedStations:
@@ -535,11 +547,13 @@ class Application(Tkinter.Tk):
 			fp.close()
 		self.destroy()
 
+	# -----------------------
 	def ClearBands(self):
 		for data in self.Bands:
 			data[0].configure(relief='raised')
 			data[1] = 0
 
+	# -----------------------
 	def MakeBands(self, name):
 		for data in self.Bands:
 			data[0].pack_forget()
@@ -581,6 +595,7 @@ class Application(Tkinter.Tk):
 		if count:
 			self.SelectBand(0)
 
+	# -----------------------
 	def SelectBand(self, index):
 		"""
 		self.Bands is a list of [button, selected, filedata]
@@ -604,6 +619,7 @@ class Application(Tkinter.Tk):
 			self.Bands[index][0].configure(relief='sunken')
 			self.Bands[index][1] = 1
 
+	# -----------------------
 	def DisplayStation(self, freq):
 		if self.Stations.has_key(freq):
 			data = self.Stations[freq]
@@ -613,6 +629,7 @@ class Application(Tkinter.Tk):
 			self.varCall.set('')
 			self.varStation.set('')
 
+	# -----------------------
 	def NextStation(self, up):
 		""" Tune to next station."""
 		from bisect import bisect_left, bisect_right
@@ -635,6 +652,7 @@ class Application(Tkinter.Tk):
 		self.dispMode.Set(self.Stations[freq][2])
 		self.dispFilter.Set(self.Stations[freq][3])
 
+	# -----------------------
 	def NextFrequency(self, up, wrap=0):
 		bands = []
 		for b, sel, data in self.Bands:
@@ -697,6 +715,7 @@ class Application(Tkinter.Tk):
 					self.dispFilter.Set(data[5])
 					return 1
 
+	# -----------------------
 	def ScanDownBand(self):
 		if self.radio.power != 1:
 			return
@@ -739,6 +758,7 @@ class Application(Tkinter.Tk):
 		elif self.scanner < 0:
 			self.ScanDownBand()
 
+	# -----------------------
 	def RunScanner(self):
 		p = self.radio.serialport
 		if p.isOpen() and self.scanner:
@@ -754,6 +774,7 @@ class Application(Tkinter.Tk):
 			else:
 				self.StopScanner()
 
+	# -----------------------
 	def StepBandMenu(self, event):
 		menu = Tkinter.Menu(self, tearoff=0)
 
@@ -762,12 +783,14 @@ class Application(Tkinter.Tk):
 
 		menu.tk_popup(event.x_root, event.y_root)
 
+	# -----------------------
 	def StepBandChange(self, freq):
 		text = ShowFreq(freq)
 		self.dispStepBandU.config(text=text+'>')
 		self.dispStepBandD.config(text='<'+text)
 		self.band_step = freq
 
+	# -----------------------
 	def MemoryButtonCmd(self, index):
 		tup = self.Memories[index]
 		# tup is freq, mode, filter
@@ -775,7 +798,7 @@ class Application(Tkinter.Tk):
 			self.dispMode.Set(tup[1])
 			self.dispFilter.Set(tup[2])
 			self.dispFreq.Set(tup[0])
-
+	# -----------------------
 	def MemoryButtonMenu(self, event):
 		widget = event.widget
 		index = widget.index
@@ -791,26 +814,27 @@ class Application(Tkinter.Tk):
 
 		menu.add_command(label=t, command=Shim(self.MemoryButtonErase, event))
 		menu.tk_popup(event.x_root, event.y_root)
-
+	# -----------------------
 	def MemoryButtonSet(self, event):
 		widget = event.widget
 		index = widget.index
 		self.Memories[index] = (self.radio.frequency, self.radio.mode, self.radio.filter)
 		widget.configure(state='normal')
-
+	# -----------------------
 	def MemoryButtonErase(self, event):
 		widget = event.widget
 		index = widget.index
 		self.Memories[index] = None
 		widget.configure(state='disabled')
-
+	# -----------------------
 	def ShiftButton(self):
 		if self.varShift.get():
 			self.shift_back = self.radio.frequency
 			self.dispFreq.Set(self.shift_back + self.shift_delta)
 		else:
 			self.dispFreq.Set(self.shift_back)
-
+	
+	# -----------------------
 	def ShiftButtonMenu(self, event):
 		menu = Tkinter.Menu(self, tearoff=0)
 		lst = ('100k', '600k', '1.2m')
@@ -823,6 +847,7 @@ class Application(Tkinter.Tk):
 
 		menu.tk_popup(event.x_root, event.y_root)
 
+	# -----------------------
 	def ShiftButtonChange(self, widget, text):
 		self.varShift.set(0)
 		widget.config(text=text)
@@ -838,6 +863,7 @@ class Application(Tkinter.Tk):
 		else:
 			self.power_button.SetColorNum(0)
 
+	# -----------------------
 	def SetStation(self, event):
 		freq = self.radio.frequency
 		call = self.varCall.get().strip()
@@ -860,6 +886,7 @@ class Application(Tkinter.Tk):
 								   self.radio.filter, desc + '\n']
 		self.WriteStations()
 
+	# -----------------------
 	def OnButtonSerial(self):
 		global LOGGER
 		if isinstance(LOGGER, DialogSerial):
@@ -868,6 +895,7 @@ class Application(Tkinter.Tk):
 			LOGGER = DialogSerial(self.radio.serialport, None)
 			LOGGER.wm_transient(self)
 
+	# -----------------------
 	def ReadSerial(self):
 		p = self.radio.serialport
 		if p.isOpen():
@@ -882,6 +910,7 @@ class Application(Tkinter.Tk):
 					LOGGER.write(text)
 				self.radio.RadioParseInput(text)
 
+	# -----------------------
 	def OnButtonMemscan(self):
 		if self.radio.power != 1:
 			return
@@ -893,6 +922,7 @@ class Application(Tkinter.Tk):
 		else:
 			self.StartMemscan()
 
+	# -----------------------
 	def RunMemscan(self):
 		p = self.radio.serialport
 		if p.isOpen() and self.memscanner:
@@ -902,38 +932,45 @@ class Application(Tkinter.Tk):
 				self.NextStation(1)						# tune to the next channel
 				self.after(ScanMillisecs, self.RunMemscan)	# Reschedule ourself
 
+	# -----------------------
 	def PauseMemscan(self):
 		if self.radio.squelch_open:
 			self.after(ScanMillisecs, self.PauseMemscan)				# wait for squelch to close
 		else:
 			self.after(3000, self.HoldForFollowupMemscan)	# delay in case it comes back right away
 
+	# -----------------------
 	def HoldForFollowupMemscan(self):
 		if self.radio.squelch_open:
 			self.after(ScanMillisecs, self.PauseMemscan)
 		else:
 			self.after(ScanMillisecs, self.RunMemscan)
 
+	# -----------------------
 	def StopMemscan(self):
 		self.memscanner = False
 		self.dispMemscan.config(background=self.btnBcolor, 
 								activebackground=self.btnAcolor, relief='raised')
 
+	# -----------------------
 	def StartMemscan(self):
 		self.memscanner = True
 		self.dispMemscan.config(background=ncolor, activebackground=ncolor, 
 								relief='sunken')
 		self.after(ScanMillisecs, self.RunMemscan)
 
+	# -----------------------
 	def OnButtonUnused2(self):
 		pass
 
+	# -----------------------
 	def SetDtmf(self, ch):
 		t = self.textDTMF + ch
 		t = t[-12:]
 		self.textDTMF = t
 		self.dispDTMF.config(text='	 DTMF Tone: ' + t)
 
+# ------------------------------------------------------------------------------
 class PCR1000:
 	"""This class implements the interface to an Icom PCR1000 radio."""
 	modes = ('LSB', 'CW', 'USB', 'AM', 'nFM', 'wFM')
